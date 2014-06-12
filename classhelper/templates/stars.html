@@ -1,0 +1,14 @@
+<link href="{{ STATIC_URL }}/css/classhelper.css" rel="stylesheet"></link>
+
+{% if stars %}
+    <span class="rating-show">
+        {% for i in stars reversed%}
+            <input type="radio" class="rating-input" 
+                {% if i == value %} checked {% endif %} id="rating-input-{{ code }}-{{ i }}" name="rating-input-{{ code }}-{{ type }}" disabled>
+            <label title="{{ value }}" for="rating-input-{{ code }}-{{ i }}" class="rating-star"></label>
+        {% endfor %}
+    </span>
+{% else %}
+    <span class="rating-show"><i class="icon-minus"></i></span>
+{% endif %}
+

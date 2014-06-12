@@ -1,0 +1,6 @@
+<h6>Filrer på tags</h6>
+{% for tag in tags %}
+    <div class="tags">
+        <span class="label" id={{ tag.id }}>{{ tag }}</span>
+    </div>
+{% endfor %}

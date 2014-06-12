@@ -1,0 +1,26 @@
+{% extends "base_classhelper.html" %}
+
+
+{% block content %}
+
+ <form action="" method="post">
+    {% csrf_token %}
+    <fieldset>
+    <legend>Add Subject</legend>
+    {% for field in form %}
+        <div class="fieldWrapper">
+            <label> {{ field.label }} </label>
+            <div class="input">{{ field }}</div>
+            <div class="error">{{ field.errors }}</div>
+        </div>
+    {% endfor %}
+    </fieldset>
+ <input type="submit" class="btn primary" value="Save" />
+ <link href="{{ STATIC_URL }}css/chosen.css" rel="stylesheet">
+ <script src="{{ STATIC_URL }}js/chosen.jquery.min.js"></script>
+ <script src="{{ STATIC_URL }}js/chosen.proto.min.js"></script>
+ <script>
+    initChocen();
+ </script>
+{% endblock content %}
+

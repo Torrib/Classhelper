@@ -1,0 +1,108 @@
+{% extends "base_classhelper.html" %}
+{% load template_tags %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row-fuid">
+            <div class="span8">
+                <a href="{% url "subject_edit" subject.id %}"><button class="btn pull-right">Edit</button></a>
+
+                <h3>{{ subject.subject_code }} -  {{ subject.subject_name }}</h3>
+                <dl>
+                    <dt>Beskrivelse</dt>
+                    <dd>{{ subject.comment }}</dd>
+                    <dt>Øvingsopplegg</dt>
+                    <dd>{{ subject.assignments }}</dd>
+                </dl>
+            </div>
+            <div class="span3">
+                <div class="sidebar">
+                    <div class="well">
+                        <h6 class="btn-primary">Ratings</h6>
+                        <div class="sidebar-group">
+                            <div class="sidebar-rating">
+                                <label>Total Vurdering</label>
+                                <div class="result">{{ subject.get_rating.total_rating }}</div>
+                            </div>
+                            <div class="sidebar-rating">
+                                <label>Forelesnings kvalitet</label>
+                                <div class="result">{{ subject.get_rating.lecture_quality }}</div>
+                            </div>
+                            <div class="sidebar-rating">
+                                <label>Vanskelighetsgrad</label>
+                                <div class="result">{{ subject.get_rating.difficulty }}</div>
+                            </div>
+                            <div class="sidebar-rating">
+                                <label>Tidskrevende</label>
+                                <div class="result">{{ subject.get_rating.time_demanding }}</div>
+                            </div>
+                            <div class="sidebar-rating">
+                                <label>Teori / praktisk</label>
+                                <div class="result">{{subject.get_rating.theory_vs_practice }}</div>
+                            </div>
+                        </div>
+                        <h6 class="btn-primary">Info</h6>
+                        <div class="sidebar-group">
+                            <div class="sidebar-rating">
+                                <label>Eksamen</label>
+                                <div class="result">{{ subject.get_examination_type_display }}</div>
+                            </div>
+                            <div class="sidebar-rating">
+                                <label>Offisiel fagside</label>
+                                <div class="result"><a href="{{ subject.ntnu_url }}">link</a></div>
+                            </div>
+                            <div class="sidebar-rating">
+                                <label>Tags</label>
+                                {% for tag in subject.tags.all %}
+                                    <div class="label label-info result">{{ tag }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <h6 class="btn-primary">Karakterstatistikk</h6>
+                        <div class="sidebar-group">
+                            {% if subject.grades_set.all|length < 1 %}
+                                <p> Ingen karakter statestikk for dette faget </p>
+                            {% endif %}
+                            <div id="grades-graph"></div>
+                            <div class="btn-toolbar">
+                                <div id=grades-buttons class="btn-group"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="{% url "assessment_new" subject.id %}"><button class="btn btn-primary">Ny komentar</button></a>
+        <a href="{% url "document_view" subject.id %}"><button class="btn btn-primary">Ny fil</button></a>
+    </div>
+    <div class="row-fluid">
+        <div class="span8">
+            <div class="comments">
+                {% for assessment in subject.assessment_set.all %}
+                    {% if assessment.comment %}
+                        <div class="comment">
+                            <div class="btn-primary">
+                                <h6>Brukernavn</h6>
+                                <span class="year">{{ assessment.year_taken }}</span>
+                            </div>
+                            <div class="content">
+                                <p>{{ assessment.comment }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div id="derp" style="height:200px;width:250px; "></div>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jqplot.barRenderer.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jqplot.pointLabels.min.js"></script>
+    <style href="{{ STATIC_URL }}css/jquery.jqplot.min.css"></style>
+    <script>
+        initGraph({{ subject.id }});
+        initRatings();
+    </script>
+{% endblock content %}
+

@@ -1,0 +1,62 @@
+{% extends "base_classhelper.html" %}
+{% load template_tags %} 
+
+{% block content %}
+
+ <form action="" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend>Add assessment</legend>
+        {% for field in form %}
+            {% if field.field.widget|get_class == "RadioSelect" %}
+                <label class="radiolabel"> {{ field.label }}</label>
+                <span class="rating">
+                    {% for radio in field reversed %}
+                    {% with field.name|merge:forloop.counter0 as radioid %}
+                        {{ radio.tag|fix_radio:radioid }}
+                        <label for="{{ radioid }}" class="rating-star"></label>
+                    {% endwith %}
+                    {% endfor %}
+                </span>
+            {% else %}
+                <div class="fieldWrapper">
+                    <label>{{ field.label_tag }}</label>
+                    <div class="input">{{ field }}</div>
+                </div>
+            {% endif %}
+            <div class="error">{{ field.errors }}</div>
+        {% endfor %}
+    </fieldset>
+    <div id="flip"><i id="optional-icon" class="icon-chevron-down"></i></div>
+    <div class="collapsible" id="panel">
+       <fieldset>
+        {% for field in optional_form %}
+            {% if field.field.widget|get_class == "RadioSelect" %}
+                <label class="radiolabel"> {{ field.label }}</label>
+                <span class="rating">
+                    {% for radio in field reversed %}
+                    {% with field.name|merge:forloop.counter0 as radioid %}
+                        {{ radio.tag|fix_radio:radioid }}
+                        <label for="{{ radioid }}" class="rating-star"></label>
+                    {% endwith %}
+                    {% endfor %}
+                </span>
+            {% else %}
+                <div class="fieldWrapper">
+                    <label>{{ field.label}}</label>
+                    <div class="input">{{ field }}</div>
+                </div>
+            {% endif %}
+            <div class="error">{{ field.errors }}</div>
+        {% endfor %}
+        </fieldset>
+    </div>
+ <input type="submit" class="btn-primary" value="Save" />
+ <link href="{{ STATIC_URL }}css/chosen.css" rel="stylesheet">
+ <script src="{{ STATIC_URL }}js/chosen.jquery.min.js"></script>
+ <script src="{{ STATIC_URL }}js/chosen.proto.min.js"></script>
+ <script>
+    initChocen();
+</script>
+{% endblock content %}
+
